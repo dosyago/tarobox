@@ -67,3 +67,10 @@ with a counter, would produce good entropy / IID. And it does. I have experience
 ## Where is the name from?
 
 TaroBox is an anagram of the constituent parts "btoa" and "xor" 
+
+## Install
+
+```
+npm i --save tarobox
+```
+
