@@ -4,7 +4,7 @@ TaroBox - A simple variable-size PRNG built from btoa and XOR
 
 ## Program
 
-Compression step
+*Compression step*
 
 input - raw data, compressed length
 
@@ -14,11 +14,11 @@ procedure - simply wrap around the data from end to start, and xor it, and add a
 
 operations are done modulo 256
 
-Expansion step
+*Expansion step*
 
-input compressed data
+input - compressed data
 
-output raw data
+output - raw data
 
 procedure - take the btoa of the data (performing any necessary conversion first to make the data valid input for btoa)
 
