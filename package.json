@@ -1,0 +1,18 @@
+{
+  "name": "tarobox",
+  "version": "1.0.0",
+  "description": "prng",
+  "main": "prng.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com//crislin2046/tarobox"
+  },
+  "author": "@dosy",
+  "license": "MIT",
+  "dependencies": {
+    "esm": "^3.2.18"
+  }
+}
