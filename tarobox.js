@@ -13,7 +13,7 @@ function compress(buf, size) {
 
 function expand(buf) {
   const str = buf.toString('base64');
-  const expandedBuf = Buffer.from(str, 'utf8');
+  const expandedBuf = Buffer.from(str, 'binary');
   return expandedBuf;
 }
 
