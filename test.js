@@ -10,12 +10,15 @@ if ( ! fs.existsSync(out) ) {
   fs.mkdirSync(out, {recursive:true});
 }
 
-testByte();
-testHalfState();
+//testByte();
+//testHalfState();
+//testQuarterState();
+
+findBestConfig();
 
 function testByte(tb) {
   tb = tb || new TaroBox();
-  console.log("Testing byte output...");
+  console.log(`Testing byte output for ${tb._size}-byte state...`);
 
   const SIZE = 1000000;
 
@@ -35,7 +38,7 @@ function testByte(tb) {
   const brotli = -((SIZE-zlib.brotliCompressSync(buf).length)/SIZE*100);
   const deflate = -((SIZE-zlib.deflateSync(buf).length)/SIZE*100);
   const gzip = -((SIZE-zlib.gzipSync(buf).length)/SIZE*100);
-  const stats = {brotli,deflate,gzip,size: SIZE};
+  const stats = {brotli,deflate,gzip,size: tb._size, type: 'byte'};
   console.log(`Brotli change: ${(brotli).toFixed(2)}%`);
   console.log(`Deflate change: ${(deflate).toFixed(2)}%`);
   console.log(`Gzip change: ${(gzip).toFixed(2)}%`);
@@ -48,7 +51,7 @@ function testByte(tb) {
 
 function testHalfState(tb) {
   tb = tb || new TaroBox();
-  console.log("Testing half state output...");
+  console.log(`Testing half state output for ${tb._size}-byte state...`);
 
   let hs = tb.halfState();
 
@@ -73,7 +76,7 @@ function testHalfState(tb) {
   const brotli = -((SIZE-zlib.brotliCompressSync(buf).length)/SIZE*100);
   const deflate = -((SIZE-zlib.deflateSync(buf).length)/SIZE*100);
   const gzip = -((SIZE-zlib.gzipSync(buf).length)/SIZE*100);
-  const stats = {brotli,deflate,gzip,size: SIZE};
+  const stats = {brotli,deflate,gzip,size: tb._size, type:'half'};
   console.log(`Brotli change: ${(brotli).toFixed(2)}%`);
   console.log(`Deflate change: ${(deflate).toFixed(2)}%`);
   console.log(`Gzip change: ${(gzip).toFixed(2)}%`);
@@ -86,7 +89,7 @@ function testHalfState(tb) {
 
 function testQuarterState(tb) {
   tb = tb || new TaroBox();
-  console.log("Testing quarter state output...");
+  console.log(`Testing quarter state output for ${tb._size}-byte state...`);
 
   let hs = tb.quarterState();
 
@@ -111,7 +114,7 @@ function testQuarterState(tb) {
   const brotli = -((SIZE-zlib.brotliCompressSync(buf).length)/SIZE*100);
   const deflate = -((SIZE-zlib.deflateSync(buf).length)/SIZE*100);
   const gzip = -((SIZE-zlib.gzipSync(buf).length)/SIZE*100);
-  const stats = {brotli,deflate,gzip,size: SIZE};
+  const stats = {brotli,deflate,gzip,size: tb._size, type:'quarter'};
   console.log(`Brotli change: ${(brotli).toFixed(2)}%`);
   console.log(`Deflate change: ${(deflate).toFixed(2)}%`);
   console.log(`Gzip change: ${(gzip).toFixed(2)}%`);
@@ -123,10 +126,20 @@ function testQuarterState(tb) {
 }
 
 function findBestConfig() {
+  console.log("Finding best config...");
   const results = [];
 
-  for( state = 2; state <= 50; state++ ) {
+  for( let state = 4; state <= 50; state++ ) {
     const tb = new TaroBox('', state);
-    
+    const half_result = testHalfState(tb);
+    const quarter_result = testQuarterState(tb);
+    results.push(half_result);
+    results.push(quarter_result);
   }
+
+  results.sort((a,b) => b.avg - a.avg);
+  console.log("Sorted results:\n");
+  console.log(JSON.stringify(results, null, 2));
+
+  console.log("\nDone!\n");
 }
