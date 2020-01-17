@@ -3,8 +3,8 @@
 #include "tarobox.h"
 #include "base64/include/libbase64.h"
 
-const int SIZE = 41;
-const int ROUNDS = 8;
+#define SIZE 41
+#define ROUNDS 8
 
 #if defined(_MSC_VER)
 
@@ -20,13 +20,6 @@ const int ROUNDS = 8;
 
 //---------
 // compress function : compress the state back into its size
-
-FORCE_INLINE uint8_t* compress ( uint8_t * buf, int bufLen )
-{
-  int endOffset;
-  uint8_t newBuf[SIZE];
-  return compressOffset( newBuf, buf, bufLen, 0, &endOffset );
-}
 
 FORCE_INLINE uint8_t* compressOffset ( uint8_t * newBuf, uint8_t * buf, int bufLen, int startOffset, int * offset )
 {
@@ -45,11 +38,19 @@ FORCE_INLINE uint8_t* compressOffset ( uint8_t * newBuf, uint8_t * buf, int bufL
   return newBuf;
 }
 
+FORCE_INLINE uint8_t* compress ( uint8_t * buf, int bufLen )
+{
+  int endOffset;
+  uint8_t newBuf[SIZE];
+  return compressOffset( newBuf, buf, bufLen, 0, &endOffset );
+}
+
+
 FORCE_INLINE uint8_t* expand ( uint8_t * buf, int bufLen, int * outlen )
 {
   char * src = (char *)buf;
   char out[60];
-  uint8_t * outBuf = out;
+  uint8_t * outBuf = (uint8_t *)out;
 
   base64_encode(src, bufLen, out, outlen);
 
@@ -59,7 +60,7 @@ FORCE_INLINE uint8_t* expand ( uint8_t * buf, int bufLen, int * outlen )
 //---------
 // round function : process the state
 
-FORCE_INLINE void round ( const uint8_t * state )
+FORCE_INLINE void round ( uint8_t * state )
 {
   int expandLen;
   uint8_t * expandedState;
@@ -75,14 +76,14 @@ FORCE_INLINE void round ( const uint8_t * state )
 //---------
 // setup function : setup the state
 
-FORCE_INLINE void setup ( const uint8_t *str, int length, uint32_t seed, uint8_t *state ) 
+FORCE_INLINE void setup ( uint8_t *str, int len, uint32_t seed, uint8_t *state ) 
 {
   //
   uint8_t newState[SIZE];
-  uint8_t * seed8 = &seed;
+  uint8_t * seed8 = (uint8_t *)&seed;
   int restartOffset;
 
-  compressOffset( newState, str, size, 0, &restartOffset );
+  compressOffset( newState, str, len, 0, &restartOffset );
   compressOffset( newState, seed8, 4, restartOffset, &restartOffset );
 
   memcpy(state, newState, SIZE);
@@ -112,12 +113,12 @@ FORCE_INLINE void nState( uint8_t *state, int size, void * out )
 void tarobox_64 ( const void * key, int len,
                    uint32_t seed, void * out )
 {
-  const uint8_t * data = (const uint8_t *)key;
+  uint8_t * data = (uint8_t *)key;
   uint8_t state [SIZE];
 
   // concatenate seed + key
   // call it msg
-  setup( msg, len, seed, state );
+  setup( data, len, seed, state );
 
   for( int i = 0; i < ROUNDS; i++) {
     round(state);
