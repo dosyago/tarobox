@@ -56,23 +56,27 @@ export default class TaroBox {
     return halfState;
   }
   nState(n) {
-    round(this._state, this._size);
     const size = n;
     const nState = new Buffer(n);
-    for( let i = 0; i < Math.max(size, this._size); i++) {
-      const j = i%this._size;
-      nState[i%size] ^= this._state[j];
-      if ( j == 0 ) {
-        round(this._state, this._size);
+    if ( size <= this._size >> 2 ) {
+      for( let i = 0; i < this._size; i++) {
+        nState[i%size] ^= this._state[i];
+      }
+    } else {
+      for( let i = 0; i < size;) {
+        const qs = this.quarterState();
+        qs.copy(nState, i, 0, Math.min(size - i, qs.length));
+        i += qs.length;
       }
     }
     return nState;
   }
-  hash(msg = '', seed = '', n = 8) {
+  hash(msg = '', seed = '', n = 8, rounds = 0) {
     const size = n;
-    this._state = setup(seed + msg, size);
-    round(this._state, this._size);
-    round(this._state, this._size);
+    this._state = setup(seed + msg, this._size);
+    for( let i = 0; i < rounds; i++ ) {
+      round(this._state, this._size);
+    }
     return this.nState(n);
   }
 }

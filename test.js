@@ -15,11 +15,12 @@ if ( ! fs.existsSync(out) ) {
 //testByte();
 //testHalfState();
 //testQuarterState();
-testHash();
-
+for ( let i = 0; i < 7; i++ ) {
+  testHash(null, i);
+}
 //findBestConfig();
 
-function testHash(tb) {
+function testHash(tb, rounds = 0) {
   tb = tb || new TaroBox();
   console.log(`Testing hash...`);
 
@@ -36,11 +37,11 @@ function testHash(tb) {
 
   const results = messages.map(msg => {
     const hashes = [
-      tb.hash(msg, seed, 1),
-      tb.hash(msg, seed, 2),
-      tb.hash(msg, seed, 4),
-      tb.hash(msg, seed, 8),
-      tb.hash(msg, seed, 64),
+      tb.hash(msg, seed, 1, rounds),
+      tb.hash(msg, seed, 2, rounds),
+      tb.hash(msg, seed, 4, rounds),
+      tb.hash(msg, seed, 8, rounds),
+      tb.hash(msg, seed, 64, rounds),
     ].map(buf => buf.toString('hex'));
 
     const result = {msg, hashes};
