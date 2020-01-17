@@ -2,28 +2,10 @@
 
 TaroBox - A simple variable-size PRNG built from btoa and XOR
 
-## Program
-
-*Compression step*
+## Install
 
 ```
-  input - raw data, compressed length
-
-  output - data of compressed length
-
-  procedure - simply wrap around the data from end to start, and xor it, and add a counter to it
-
-  operations are done modulo 256
-```
-
-*Expansion step*
-
-```
-  input - compressed data
-
-  output - raw data
-
-  procedure - take the btoa of the data (performing any necessary conversion first to make the data valid input for btoa)
+npm i --save tarobox
 ```
 
 ## Hypothesis
@@ -68,10 +50,28 @@ with a counter, would produce good entropy / IID. And it does. I have experience
 
 TaroBox is an anagram of the constituent parts "btoa" and "xor" 
 
-## Install
+## Program
+
+*Compression step*
 
 ```
-npm i --save tarobox
+  input - raw data, compressed length
+
+  output - data of compressed length
+
+  procedure - simply wrap around the data from end to start, and xor it, and add a counter to it
+
+  operations are done modulo 256
+```
+
+*Expansion step*
+
+```
+  input - compressed data
+
+  output - raw data
+
+  procedure - take the btoa of the data (performing any necessary conversion first to make the data valid input for btoa)
 ```
 
 ## Testing Dieharder
