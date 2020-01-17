@@ -12,11 +12,11 @@ if ( ! fs.existsSync(out) ) {
   fs.mkdirSync(out, {recursive:true});
 }
 
-//testByte();
-//testHalfState();
+testByte();
+testHalfState();
 testQuarterState();
-//testHashRounds();
-//findBestConfig();
+testHashRounds();
+findBestConfig();
 
 function testHashRounds() {
   for ( let i = 0; i < 8; i++ ) {
