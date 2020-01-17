@@ -1,4 +1,4 @@
-import TaroBox from './prng.js';
+import TaroBox from './tarobox.js';
 import fs from 'fs';
 
 test();
