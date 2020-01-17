@@ -29,12 +29,30 @@ function setup(str, size) {
 }
 
 export default class TaroBox {
-  constructor(seed = '', size = 20) {
+  constructor(seed = '', size = 45) {
     this._size = size;
     this._state = setup(seed, size);
   }
   random() {
     round(this._state, this._size);
     return Array.from(this._state).reduce((sum, val) => sum + val, 0);
+  }
+  halfState() {
+    round(this._state, this._size);
+    const size = this._size >> 1;
+    const halfState = this._state.slice(0, size);
+    for( let i = size; i < this._size; i++) {
+      halfState[i%size] ^= this._state[i];
+    }
+    return halfState;
+  }
+  quarterState() {
+    round(this._state, this._size);
+    const size = this._size >> 2;
+    const halfState = this._state.slice(0, size);
+    for( let i = size; i < this._size; i++) {
+      halfState[i%size] ^= this._state[i];
+    }
+    return halfState;
   }
 }
