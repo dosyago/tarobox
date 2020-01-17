@@ -29,7 +29,7 @@ function setup(str, size) {
 }
 
 export default class TaroBox {
-  constructor(seed = '', size = 45) {
+  constructor(seed = '', size = 41) {
     this._size = size;
     this._state = setup(seed, size);
   }
@@ -54,5 +54,25 @@ export default class TaroBox {
       halfState[i%size] ^= this._state[i];
     }
     return halfState;
+  }
+  nState(n) {
+    round(this._state, this._size);
+    const size = n;
+    const nState = new Buffer(n);
+    for( let i = 0; i < Math.max(size, this._size); i++) {
+      const j = i%this._size;
+      nState[i%size] ^= this._state[j];
+      if ( j == 0 ) {
+        round(this._state, this._size);
+      }
+    }
+    return nState;
+  }
+  hash(msg = '', seed = '', n = 8) {
+    const size = n;
+    this._state = setup(seed + msg, size);
+    round(this._state, this._size);
+    round(this._state, this._size);
+    return this.nState(n);
   }
 }

@@ -15,8 +15,42 @@ if ( ! fs.existsSync(out) ) {
 //testByte();
 //testHalfState();
 //testQuarterState();
+testHash();
 
-findBestConfig();
+//findBestConfig();
+
+function testHash(tb) {
+  tb = tb || new TaroBox();
+  console.log(`Testing hash...`);
+
+  const messages = [
+    "",
+    "cris",
+    "abc",
+    "abd",
+    "0",
+    "1"
+  ];
+
+  const seed = '';
+
+  const results = messages.map(msg => {
+    const hashes = [
+      tb.hash(msg, seed, 1),
+      tb.hash(msg, seed, 2),
+      tb.hash(msg, seed, 4),
+      tb.hash(msg, seed, 8),
+      tb.hash(msg, seed, 64),
+    ].map(buf => buf.toString('hex'));
+
+    const result = {msg, hashes};
+    return result;
+  });
+
+  console.log("Results:");
+  console.log(JSON.stringify(results, null, 2));
+  console.log("Done!\n");
+}
 
 function testByte(tb) {
   tb = tb || new TaroBox();
