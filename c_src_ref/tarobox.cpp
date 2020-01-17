@@ -48,11 +48,14 @@ FORCE_INLINE uint8_t* compress ( uint8_t * buf, int bufLen )
 
 FORCE_INLINE uint8_t* expand ( uint8_t * buf, int bufLen, int * outlen )
 {
+  size_t * outSize;
   char * src = (char *)buf;
   char out[60];
   uint8_t * outBuf = (uint8_t *)out;
 
-  base64_encode(src, bufLen, out, outlen);
+  base64_encode(src, bufLen, out, outSize, 0);
+
+  *outlen = (int)*outSize;
 
   return outBuf;
 }
@@ -103,7 +106,7 @@ FORCE_INLINE void nState( uint8_t *state, int size, void * out )
     h[i&7] ^= state[i];
   }
 
-  ((uint8_t*)out) = h; 
+  out = (void *)h; 
 }
 
 //---------
