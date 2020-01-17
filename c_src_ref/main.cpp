@@ -12,10 +12,10 @@ int main ()
 
 	base64_encode(src, srclen, out, &outlen, 0);
 
-  tarobox_64((void *)out, (int)outlen, 0, (void *)out2 );
+  tarobox_64(src, srclen, 0, (void *)out2 );
 
-	fwrite(out, outlen, 1, stdout);
 	fwrite(out2, 8, 1, stdout);
+  fwrite("\n", sizeof("\n"), 1, stdout);
 
 	return 0;
 }
