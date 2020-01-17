@@ -14,11 +14,15 @@ if ( ! fs.existsSync(out) ) {
 
 //testByte();
 //testHalfState();
-//testQuarterState();
-for ( let i = 0; i < 8; i++ ) {
-  testHash(null, i);
-}
+testQuarterState();
+//testHashRounds();
 //findBestConfig();
+
+function testHashRounds() {
+  for ( let i = 0; i < 8; i++ ) {
+    testHash(null, i);
+  }
+}
 
 function testHash(tb, rounds = 0) {
   tb = tb || new TaroBox();
@@ -134,6 +138,7 @@ function testQuarterState(tb) {
   tb = tb || new TaroBox();
   console.log(`Testing quarter state output for ${tb._size}-byte state...`);
 
+  const start = Date.now();
   let hs = tb.quarterState();
 
   const MIN_SIZE = 1000000;
@@ -149,7 +154,8 @@ function testQuarterState(tb) {
     hs = tb.quarterState();
   }
 
-  console.log(`Writing ${SIZE} bytes...`);
+  const end = Date.now();
+  console.log(`Generated in ${end-start}ms. Writing ${SIZE} bytes...`);
 
   fs.writeFileSync(path.resolve(out,Date.now()+'.quarterstate.output.bin'), buf);
 
