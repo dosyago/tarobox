@@ -8,11 +8,17 @@ function test() {
 
   const SIZE = 1000000;
 
+  console.log(`Generating ${SIZE} pseudo-random bytes...`);
+
   const buf = new Buffer(SIZE);
 
   for( let i = 0; i < SIZE; i++ ) {
     buf[i] = tb.random();
   }
 
-  fs.writeFileSync('xyz', buf);
+  console.log(`Writing ${SIZE} bytes...`);
+
+  fs.writeFileSync('output.bin', buf);
+
+  console.log('Done!');
 }

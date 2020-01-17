@@ -1,10 +1,10 @@
 {
   "name": "tarobox",
   "version": "1.0.2",
-  "description": "prng",
-  "main": "prng.js",
+  "description": "tarobox - ridiculously simple hash primitive build on base64 expand step and xor compress step",
+  "main": "tarobox.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node -r esm test.js"
   },
   "repository": {
     "type": "git",
