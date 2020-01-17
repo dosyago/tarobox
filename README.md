@@ -52,27 +52,13 @@ TaroBox is an anagram of the constituent parts "btoa" and "xor"
 
 ## Program
 
-*Compression step*
-
-```
-  input - raw data, compressed length
-
-  output - data of compressed length
-
-  procedure - simply wrap around the data from end to start, and xor it, and add a counter to it
-
-  operations are done modulo 256
-```
-
 *Expansion step*
 
-```
-  input - compressed data
+take the base64 of the data
 
-  output - raw data
+*Compression step*
 
-  procedure - take the btoa of the data (performing any necessary conversion first to make the data valid input for btoa)
-```
+wrap the data to the origin state size, from end to start, and xor it, and add a counter to it
 
 ## Testing Dieharder
 
