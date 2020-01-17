@@ -1,7 +1,7 @@
 #include <math.h>
 #include <string.h>
+#include "libbase64.h"
 #include "tarobox.h"
-#include "base64/include/libbase64.h"
 
 #define SIZE 41
 #define ROUNDS 8
@@ -42,6 +42,7 @@ FORCE_INLINE uint8_t* compress ( uint8_t * buf, int bufLen )
 {
   int endOffset;
   uint8_t newBuf[SIZE];
+
   return compressOffset( newBuf, buf, bufLen, 0, &endOffset );
 }
 
