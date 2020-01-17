@@ -141,7 +141,7 @@ function findBestConfig() {
   const result = [];
   const start = Date.now();
   const MIN = 4;
-  const MAX = 1456;
+  const MAX = 145; // 1456 later
 
   for( let state = MIN; state <= MAX; state++ ) {
     const tb = new TaroBox('', state);
