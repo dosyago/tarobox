@@ -139,8 +139,11 @@ function testQuarterState(tb) {
 function findBestConfig() {
   console.log("Finding best config...");
   const result = [];
+  const start = Date.now();
+  const MIN = 4;
+  const MAX = 1456;
 
-  for( let state = 4; state <= 145; state++ ) {
+  for( let state = MIN; state <= MAX; state++ ) {
     const tb = new TaroBox('', state);
     const half_result = testHalfState(tb);
     const quarter_result = testQuarterState(tb);
@@ -151,7 +154,11 @@ function findBestConfig() {
   const sorted = Array.from(result).map(({avg,type,size,key}) => ({avg,type,size,key}));;
   sorted.sort((a,b) => b.avg - a.avg);
 
-  const results = JSON.stringify({test:{at:new Date, sorted,result}}, null, 2);
+  const end = Date.now();
+
+  const duration_seconds = (end-start)/1000;
+  const space_explored = MAX-MIN+1;
+  const results = JSON.stringify({test:{at:new Date, space_explored, min: MIN, max: MAX, duration_seconds, sorted,result}}, null, 2);
 
   console.log("Sorted results:\n");
   
