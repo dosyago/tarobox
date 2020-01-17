@@ -15,7 +15,7 @@ if ( ! fs.existsSync(out) ) {
 //testByte();
 //testHalfState();
 //testQuarterState();
-for ( let i = 0; i < 7; i++ ) {
+for ( let i = 0; i < 8; i++ ) {
   testHash(null, i);
 }
 //findBestConfig();

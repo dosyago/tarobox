@@ -1,8 +1,12 @@
 function compress(buf, size) {
   const newBuf = new Buffer(size);
+  let newBufIndex = 0;
   for( let i = 0; i < buf.length; i++ ) {
-    const newBufIndex = i % size;
+    if ( newBufIndex >= size ) {
+      newBufIndex = 0;
+    } 
     newBuf[newBufIndex] = (newBuf[newBufIndex] + i) ^ buf[i];
+    newBufIndex++;
   }
   return newBuf;
 }
