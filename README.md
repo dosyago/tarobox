@@ -8,36 +8,15 @@ TaroBox - A simple variable-size PRNG built from btoa and XOR
 npm i --save tarobox
 ```
 
-## Hypothesis
+## Program
 
-This should be a pretty good PRNG for states of size 8 and above, and especially of size 20 and above
+*Expansion step*
 
-## Benefits
+take the base64 of the data
 
-- Built with simple widely available primitivies (XOR, ADD, BTOA)
-- Easy to conceptualize and remember
-- Tunable parameters
-- No magic constants or BS
+*Compression step*
 
-## Costs
-
-- Slow if secure (we sum the state to produce output byte), yielding 1 byte of IID and entropy per round.
-- Fast but insecure (we could run in 'streaming' mode, just output the entire state on each round,
-yielding 20 bytes of IID per round but zero bytes of entropy (since you can reconstruct the next state from this one).
-- Untested. It passes gzip/zip test. Even if it passes SMHasher / PractRand, it's not "cryptographic".
-
-## Testing
-
-Let's test it, at first just using ZIP tests.
-
-Test 1 - Generate 1000000 random bytes, compress with gzip. Result: 0% compression with gzip.
-
-## Possible applications
-
-- For fun
-- For producing statistically IID numbers / bits
-- For constructing a proof-of-work / hash algorithm.
-- For constructing a toy (or DIY, depending on your risk tolerance / trust) stream cipher.
+wrap the data to the origin state size, from end to start, and xor it, and add a counter to it
 
 ## Where did this idea come from?
 
@@ -50,15 +29,15 @@ with a counter, would produce good entropy / IID. And it does. I have experience
 
 TaroBox is an anagram of the constituent parts "btoa" and "xor" 
 
-## Program
+## Hypothesis
 
-*Expansion step*
+This should be a pretty good PRNG for states of size 8 and above, and especially of size 20 and above
 
-take the base64 of the data
+## First Test
 
-*Compression step*
+Let's test it, at first just using ZIP tests.
 
-wrap the data to the origin state size, from end to start, and xor it, and add a counter to it
+Test 1 - Generate 1000000 random bytes, compress with gzip. Result: 0% compression with gzip.
 
 ## Testing Dieharder
 
@@ -191,3 +170,21 @@ Preparing to run test 209.  ntuple = 0
         dab_monobit2|  12|  65000000|       1|0.29396868|  PASSED
 ```
 
+## Benefits
+
+- Passes [Dieharder](https://linux.die.net/man/1/dieharder)!
+- Built with simple widely available primitivies (XOR, ADD, base64)
+- Easy to conceptualize and remember
+- Tunable parameters
+- No magic constants or BS
+
+## Possible applications
+
+- For fun
+- For producing statistically IID numbers / bits
+- For constructing a proof-of-work / hash algorithm.
+- For constructing a toy (or DIY, depending on your risk tolerance / trust) stream cipher.
+
+-----
+
+# *Be simple!*
