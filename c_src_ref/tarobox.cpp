@@ -21,12 +21,12 @@
 //---------
 // compress function : compress the state back into its size
 
-FORCE_INLINE uint8_t* compressOffset ( uint8_t * newBuf, uint8_t * buf, int bufLen, int startOffset, int * offset )
+FORCE_INLINE uint8_t* compressOffset ( uint8_t * newBuf, uint8_t * buf, size_t bufLen, int startOffset, int * offset )
 {
   int newBufIndex = startOffset;
 
   #pragma omp parallel for
-  for( int i = 0; i < bufLen; i++ ) {
+  for( size_t i = 0; i < bufLen; i++ ) {
     if( newBufIndex >= SIZE ) {
       newBufIndex = 0;
     }
@@ -38,7 +38,7 @@ FORCE_INLINE uint8_t* compressOffset ( uint8_t * newBuf, uint8_t * buf, int bufL
   return newBuf;
 }
 
-FORCE_INLINE uint8_t* compress ( uint8_t * buf, int bufLen )
+FORCE_INLINE uint8_t* compress ( uint8_t * buf, size_t bufLen )
 {
   int endOffset;
   uint8_t newBuf[SIZE];
@@ -47,16 +47,13 @@ FORCE_INLINE uint8_t* compress ( uint8_t * buf, int bufLen )
 }
 
 
-FORCE_INLINE uint8_t* expand ( uint8_t * buf, int bufLen, int * outlen )
+FORCE_INLINE uint8_t* expand ( uint8_t * buf, int bufLen, size_t * outlen )
 {
-  size_t * outSize;
   char * src = (char *)buf;
   char out[60];
   uint8_t * outBuf = (uint8_t *)out;
 
-  base64_encode(src, bufLen, out, outSize, 0);
-
-  *outlen = (int)*outSize;
+  base64_encode(src, bufLen-1, out, outlen, 0);
 
   return outBuf;
 }
@@ -66,7 +63,7 @@ FORCE_INLINE uint8_t* expand ( uint8_t * buf, int bufLen, int * outlen )
 
 FORCE_INLINE void round ( uint8_t * state )
 {
-  int expandLen;
+  size_t expandLen;
   uint8_t * expandedState;
   uint8_t * compressedExpandedState;
 
