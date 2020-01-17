@@ -1,6 +1,7 @@
 function compress(buf, size) {
   const newBuf = new Buffer(size);
   let newBufIndex = 0;
+  // this loop can be parallelized
   for( let i = 0; i < buf.length; i++ ) {
     if ( newBufIndex >= size ) {
       newBufIndex = 0;
@@ -45,6 +46,7 @@ export default class TaroBox {
     round(this._state, this._size);
     const size = this._size >> 1;
     const halfState = this._state.slice(0, size);
+    // this loop can be parallelized
     for( let i = size; i < this._size; i++) {
       halfState[i%size] ^= this._state[i];
     }
@@ -54,6 +56,7 @@ export default class TaroBox {
     round(this._state, this._size);
     const size = this._size >> 2;
     const halfState = this._state.slice(0, size);
+    // this loop can be parallelized
     for( let i = size; i < this._size; i++) {
       halfState[i%size] ^= this._state[i];
     }
@@ -63,10 +66,12 @@ export default class TaroBox {
     const size = n;
     const nState = new Buffer(n);
     if ( size <= this._size >> 2 ) {
+      // this loop can be parallelized
       for( let i = 0; i < this._size; i++) {
         nState[i%size] ^= this._state[i];
       }
     } else {
+      // this loop can be parallelized
       for( let i = 0; i < size;) {
         const qs = this.quarterState();
         qs.copy(nState, i, 0, Math.min(size - i, qs.length));
@@ -78,6 +83,7 @@ export default class TaroBox {
   hash(msg = '', seed = '', n = 8, rounds = 0) {
     const size = n;
     this._state = setup(seed + msg, this._size);
+    // this loop CANNOT be parallelized
     for( let i = 0; i < rounds; i++ ) {
       round(this._state, this._size);
     }
