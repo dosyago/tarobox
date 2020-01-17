@@ -6,6 +6,8 @@ import path from 'path';
 
 const out = path.resolve(__dirname, 'out');
 
+let key = Date.now();
+
 if ( ! fs.existsSync(out) ) {
   fs.mkdirSync(out, {recursive:true});
 }
@@ -35,13 +37,16 @@ function testByte(tb) {
   fs.writeFileSync(path.resolve(out,Date.now()+'.byte.output.bin'), buf);
 
   console.log("Statistics...");
-  const brotli = -((SIZE-zlib.brotliCompressSync(buf).length)/SIZE*100);
-  const deflate = -((SIZE-zlib.deflateSync(buf).length)/SIZE*100);
-  const gzip = -((SIZE-zlib.gzipSync(buf).length)/SIZE*100);
-  const stats = {brotli,deflate,gzip,size: tb._size, type: 'byte'};
-  console.log(`Brotli change: ${(brotli).toFixed(2)}%`);
-  console.log(`Deflate change: ${(deflate).toFixed(2)}%`);
-  console.log(`Gzip change: ${(gzip).toFixed(2)}%`);
+  const brotli = -((SIZE-zlib.brotliCompressSync(buf).length));
+  const deflate = -((SIZE-zlib.deflateSync(buf).length));
+  const gzip = -((SIZE-zlib.gzipSync(buf).length));
+  const brotlipc = brotli/SIZE*100;
+  const deflatepc = deflate/SIZE*100;
+  const gzippc = gzip/SIZE*100;
+  const stats = {brotli,deflate,gzip,brotlipc, deflatepc, gzippc, size: tb._size, type:'quarter', key:key++};
+  console.log(`Brotli change: ${(brotlipc).toFixed(2)}%`);
+  console.log(`Deflate change: ${(deflatepc).toFixed(2)}%`);
+  console.log(`Gzip change: ${(gzippc).toFixed(2)}%`);
 
   console.log('Done!\n');
 
@@ -73,13 +78,16 @@ function testHalfState(tb) {
   fs.writeFileSync(path.resolve(out,Date.now()+'.halfstate.output.bin'), buf);
 
   console.log("Statistics...");
-  const brotli = -((SIZE-zlib.brotliCompressSync(buf).length)/SIZE*100);
-  const deflate = -((SIZE-zlib.deflateSync(buf).length)/SIZE*100);
-  const gzip = -((SIZE-zlib.gzipSync(buf).length)/SIZE*100);
-  const stats = {brotli,deflate,gzip,size: tb._size, type:'half'};
-  console.log(`Brotli change: ${(brotli).toFixed(2)}%`);
-  console.log(`Deflate change: ${(deflate).toFixed(2)}%`);
-  console.log(`Gzip change: ${(gzip).toFixed(2)}%`);
+  const brotli = -((SIZE-zlib.brotliCompressSync(buf).length));
+  const deflate = -((SIZE-zlib.deflateSync(buf).length));
+  const gzip = -((SIZE-zlib.gzipSync(buf).length));
+  const brotlipc = brotli/SIZE*100;
+  const deflatepc = deflate/SIZE*100;
+  const gzippc = gzip/SIZE*100;
+  const stats = {brotli,deflate,gzip,brotlipc, deflatepc, gzippc, size: tb._size, type:'half', key:key++};
+  console.log(`Brotli change: ${(brotlipc).toFixed(2)}%`);
+  console.log(`Deflate change: ${(deflatepc).toFixed(2)}%`);
+  console.log(`Gzip change: ${(gzippc).toFixed(2)}%`);
 
   console.log('Done!\n');
 
@@ -111,13 +119,16 @@ function testQuarterState(tb) {
   fs.writeFileSync(path.resolve(out,Date.now()+'.quarterstate.output.bin'), buf);
 
   console.log("Statistics...");
-  const brotli = -((SIZE-zlib.brotliCompressSync(buf).length)/SIZE*100);
-  const deflate = -((SIZE-zlib.deflateSync(buf).length)/SIZE*100);
-  const gzip = -((SIZE-zlib.gzipSync(buf).length)/SIZE*100);
-  const stats = {brotli,deflate,gzip,size: tb._size, type:'quarter'};
-  console.log(`Brotli change: ${(brotli).toFixed(2)}%`);
-  console.log(`Deflate change: ${(deflate).toFixed(2)}%`);
-  console.log(`Gzip change: ${(gzip).toFixed(2)}%`);
+  const brotli = -((SIZE-zlib.brotliCompressSync(buf).length));
+  const deflate = -((SIZE-zlib.deflateSync(buf).length));
+  const gzip = -((SIZE-zlib.gzipSync(buf).length));
+  const brotlipc = brotli/SIZE*100;
+  const deflatepc = deflate/SIZE*100;
+  const gzippc = gzip/SIZE*100;
+  const stats = {brotli,deflate,gzip,brotlipc, deflatepc, gzippc, size: tb._size, type:'quarter', key:key++};
+  console.log(`Brotli change: ${(brotlipc).toFixed(2)}%`);
+  console.log(`Deflate change: ${(deflatepc).toFixed(2)}%`);
+  console.log(`Gzip change: ${(gzippc).toFixed(2)}%`);
 
   console.log('Done!\n');
 
@@ -127,19 +138,28 @@ function testQuarterState(tb) {
 
 function findBestConfig() {
   console.log("Finding best config...");
-  const results = [];
+  const result = [];
 
-  for( let state = 4; state <= 50; state++ ) {
+  for( let state = 4; state <= 145; state++ ) {
     const tb = new TaroBox('', state);
     const half_result = testHalfState(tb);
     const quarter_result = testQuarterState(tb);
-    results.push(half_result);
-    results.push(quarter_result);
+    result.push(half_result);
+    result.push(quarter_result);
   }
 
-  results.sort((a,b) => b.avg - a.avg);
+  const sorted = Array.from(result).map(({avg,type,size,key}) => ({avg,type,size,key}));;
+  sorted.sort((a,b) => b.avg - a.avg);
+
+  const results = JSON.stringify({test:{at:new Date, sorted,result}}, null, 2);
+
   console.log("Sorted results:\n");
-  console.log(JSON.stringify(results, null, 2));
+  
+  console.log(results);
+
+  console.log("Writing results to results.json file...");
+
+  fs.writeFileSync(path.resolve(out,'results.json'), results);
 
   console.log("\nDone!\n");
 }

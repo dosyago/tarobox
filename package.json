@@ -4,7 +4,8 @@
   "description": "tarobox - ridiculously simple hash primitive build on base64 expand step and xor compress step",
   "main": "tarobox.js",
   "scripts": {
-    "test": "node -r esm test.js"
+    "test": "node -r esm test.js",
+    "clean": "rm -rf ./out"
   },
   "repository": {
     "type": "git",
