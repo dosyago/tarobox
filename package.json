@@ -1,6 +1,6 @@
 {
   "name": "tarobox",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "tarobox - ridiculously simple hash primitive build on base64 expand step and xor compress step",
   "main": "tarobox.js",
   "scripts": {
