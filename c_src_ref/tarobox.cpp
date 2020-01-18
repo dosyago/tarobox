@@ -53,7 +53,7 @@ FORCE_INLINE uint8_t* expand ( uint8_t * buf, int bufLen, size_t * outlen )
   char out[60] = {0};
   uint8_t * outBuf = (uint8_t *)out;
 
-  base64_encode(src, bufLen-1, out, outlen, 0);
+  base64_encode(src, bufLen, out, outlen, 0);
 
   return outBuf;
 }
@@ -122,7 +122,7 @@ void tarobox_64 ( const void * key, int len,
   setup( data, len, seed, state );
 
   for( int i = 0; i < ROUNDS; i++) {
-    round(state);
+    //round(state);
   }
 
   nState(state, SIZE, out);
