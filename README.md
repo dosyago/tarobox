@@ -1,4 +1,4 @@
-# tarobox
+# :bento: [tarobox](https://github.com/dosyago/tarobox) ![npm downloads](https://img.shields.io/npm/dt/tarobox) ![version](https://img.shields.io/npm/v/tarobox) 
 
 TaroBox - A simple variable-size PRNG built from btoa and XOR
 
