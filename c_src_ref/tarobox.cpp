@@ -41,7 +41,7 @@ FORCE_INLINE uint8_t* compressOffset ( uint8_t * newBuf, uint8_t * buf, size_t b
 FORCE_INLINE uint8_t* compress ( uint8_t * buf, size_t bufLen )
 {
   int endOffset;
-  uint8_t newBuf[SIZE];
+  uint8_t newBuf[SIZE] = {0};
 
   return compressOffset( newBuf, buf, bufLen, 0, &endOffset );
 }
@@ -50,7 +50,7 @@ FORCE_INLINE uint8_t* compress ( uint8_t * buf, size_t bufLen )
 FORCE_INLINE uint8_t* expand ( uint8_t * buf, int bufLen, size_t * outlen )
 {
   char * src = (char *)buf;
-  char out[60];
+  char out[60] = {0};
   uint8_t * outBuf = (uint8_t *)out;
 
   base64_encode(src, bufLen-1, out, outlen, 0);
@@ -67,7 +67,7 @@ FORCE_INLINE void round ( uint8_t * state )
   uint8_t * expandedState;
   uint8_t * compressedExpandedState;
 
-  uint8_t stateCopy[SIZE];
+  uint8_t stateCopy[SIZE] = {0};
   memcpy(stateCopy, state, SIZE);
   expandedState = expand(stateCopy, SIZE, &expandLen);
   compressedExpandedState = compress(expandedState, expandLen);
@@ -80,7 +80,7 @@ FORCE_INLINE void round ( uint8_t * state )
 FORCE_INLINE void setup ( uint8_t *str, int len, uint32_t seed, uint8_t *state ) 
 {
   //
-  uint8_t newState[SIZE];
+  uint8_t newState[SIZE] = {0};
   uint8_t * seed8 = (uint8_t *)&seed;
   int restartOffset;
 
@@ -95,16 +95,16 @@ FORCE_INLINE void setup ( uint8_t *str, int len, uint32_t seed, uint8_t *state )
 
 FORCE_INLINE void nState( uint8_t *state, int size, void * out ) 
 {
-  uint8_t  output [8];
+  uint8_t  output [8] = {0};
   uint8_t * h = (uint8_t*)output;
 
   // do nState stuff
   #pragma omp parallel for
   for ( int i = 0; i < size; i++ ) {
     h[i&7] ^= state[i];
+    ((uint8_t *)out)[i&7] = h[i&7]; 
   }
 
-  out = (void *)h; 
 }
 
 //---------
@@ -115,7 +115,7 @@ void tarobox_64 ( const void * key, int len,
                    uint32_t seed, void * out )
 {
   uint8_t * data = (uint8_t *)key;
-  uint8_t state [SIZE];
+  uint8_t state [SIZE] = {0};
 
   // concatenate seed + key
   // call it msg
