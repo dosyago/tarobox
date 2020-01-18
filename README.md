@@ -173,6 +173,7 @@ Preparing to run test 209.  ntuple = 0
 ## Benefits
 
 - Passes [Dieharder](https://linux.die.net/man/1/dieharder)!
+- Does not pass [SMHasher](https://github.com/rurban/smhasher)
 - Built with simple widely available primitivies (XOR, ADD, base64)
 - Easy to conceptualize and remember
 - Tunable parameters
