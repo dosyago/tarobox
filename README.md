@@ -2,6 +2,8 @@
 
 TaroBox - A simple variable-size PRNG built from btoa and XOR
 
+**Please consider this primitive insecure as it does not pass SMHasher**
+
 ## Install
 
 ```
